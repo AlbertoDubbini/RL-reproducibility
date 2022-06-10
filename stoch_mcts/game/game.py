@@ -28,10 +28,13 @@ class ContinuousBlackJack(Env):
         )
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
+        # print("len(self.history) : ",len(self.history))
         if len(self.history) == 0:
             deal = self.deal_()
             self.dealer_total += deal
             self.history += f"dealer: {deal} ({self.dealer_total});\n"
+            # print("player_total: ",self.player_total)
+            # print("dealer_total: ",self.dealer_total)
             return (np.array([self.player_total, self.dealer_total]), 0, False, {})
         if action == self.STAND:
             while self.dealer_total < self.DEALER_STOP:
@@ -40,6 +43,8 @@ class ContinuousBlackJack(Env):
                 self.history += f"dealer: {deal} ({self.dealer_total});\n"
             dealer_won = self.player_total < self.dealer_total <= self.MAX_VALID
             reward = self.LOSE_VALUE if dealer_won else self.WIN_VALUE
+            # print("player_total: ",self.player_total)
+            # print("dealer_total: ",self.dealer_total)
             return (np.array([self.player_total, self.dealer_total]), reward, True, {})
         elif action == self.HIT:
             deal = self.deal_()
@@ -47,6 +52,8 @@ class ContinuousBlackJack(Env):
             self.history += f"player: {deal} ({self.player_total});\n"
             done = self.player_total > self.MAX_VALID
             reward = self.LOSE_VALUE if done else 0
+            # print("player_total: ",self.player_total)
+            # print("dealer_total: ",self.dealer_total)
             return (np.array([self.player_total, 0.0]), reward, done, {})
         raise ValueError("Received invalid action")
 

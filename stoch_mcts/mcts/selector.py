@@ -15,10 +15,14 @@ def dealer_policy(node: Node) -> int:
         return 0
 
 def wikipedia_policy(node: Node) -> int:
+    # print(node.state)
     if node.state[1] < 3.5:
+        # print("wiki policy: ", int(node.state[0] < 12.5))
         return int(node.state[0] < 12.5)
     elif node.state[1] < 6.5:
+        # print("wiki policy: ", int(node.state[0] < 11.5))
         return int(node.state[0] < 11.5)
+    # print("wiki policy: ", int(node.state[0] < 16.5))
     return int(node.state[0] < 16.5)
 
 class UCT:
@@ -83,7 +87,8 @@ class AbstractionRefining:
         state, reward, done, info = env.step(action)
         if not done:
             distances = {
-                node_: self.dist(state, node_.state) for node_ in node.children[action] if not node_.done
+                # node_: self.dist(state - node_.state) for node_ in node.children[action] if not node_.done 
+                node_: self.dist(state,node_.state) for node_ in node.children[action] if not node_.done 
             }
             nn = min(distances, key=distances.get)
             if min(distances.values()) <= self.k * nn.n_visits ** (-self.alpha):
